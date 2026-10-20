@@ -86,7 +86,7 @@ test('name + phone: one vote per phone number in any format, with secret ballots
   const { gas, call, admin } = boot();
   seedBallot(admin);
   admin('setStatus', { status: 'open' });
-  const choices = { chair: 'n1', sec: 'ABSTAIN', team: ['n5', 'n6'] };
+  const choices = { chair: 'n1', sec: 'n3', team: ['n5', 'n6'] };
 
   assert.equal(call({ action: 'vote', identity: { name: 'A', phone: '0712345678' }, choices }).error, 'INVALID_NAME');
   assert.equal(call({ action: 'vote', identity: { name: 'Alice W', phone: '12345' }, choices }).error, 'INVALID_PHONE');
@@ -120,7 +120,8 @@ test('name + phone: one vote per phone number in any format, with secret ballots
   const [chair, sec, team] = res.positions;
   assert.equal(chair.tie, true);
   assert.deepEqual(chair.leaders.sort(), ['n1', 'n2']);
-  assert.equal(sec.abstain, 1);
+  assert.equal(sec.abstain, 0);
+  assert.equal(sec.candidates.find((c) => c.id === 'n3').votes, 2);
   assert.deepEqual(sec.leaders, ['n3']);
   assert.equal(team.candidates.find((c) => c.id === 'n6').votes, 2);
   assert.deepEqual(res.voters.map((v) => v.name), ['Alice W', 'Bob K']);
@@ -139,6 +140,7 @@ test('ballot validation rejects bad or incomplete choices', () => {
   assert.equal(call({ action: 'vote', identity: id, choices: { chair: 'n1', sec: 'n4', team: 'n5' } }).error, 'INVALID_CHOICE');
   assert.equal(call({ action: 'vote', identity: id, choices: { chair: 'n1', sec: 'n3', team: ['n5', 'n6', 'n7'] } }).error, 'INVALID_CHOICE');
   assert.equal(call({ action: 'vote', identity: id, choices: { chair: ['n1', 'ABSTAIN'], sec: 'n3', team: 'n5' } }).error, 'INVALID_CHOICE');
+  assert.equal(call({ action: 'vote', identity: id, choices: { chair: 'ABSTAIN', sec: 'n3', team: 'n5' } }).error, 'INVALID_CHOICE', 'skipping is not allowed');
   assert.equal(admin('results').turnout, 0);
 });
 

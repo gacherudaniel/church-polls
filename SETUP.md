@@ -135,7 +135,7 @@ When voting closes (by the closing time, or when you press **Closed**), you'll g
 - **One vote per person.** By default voters give their name and phone number, and each phone number can vote once. `0712 345 678`, `+254712345678` and `254712345678` all count as the same number. You can switch to **voter codes** (strictest) or **open** (weakest) in Settings.
 - **Secret ballot.** The **Voters** tab only stores names and a scrambled version (a "hash") of the phone number, never the number itself. The **Votes** tab stores choices with no name and no time, in a shuffled order, so a vote can't be matched to a person.
 - **Keep the spreadsheet private.** The app doesn't need the sheet to be shared with anyone, because the script runs as you. Leave sharing as "Restricted" so the list of who voted stays private.
-- **Abstaining** is allowed. "Skip this position" is counted separately as *Skipped*.
+- **Every position needs a choice.** There is no "skip" option. Voters must pick someone for each position before they can submit.
 - **Ties** are flagged on the results page, in the sheet and in the email.
 
 ## Troubleshooting

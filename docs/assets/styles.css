@@ -350,8 +350,6 @@ a { color: var(--primary); }
 .c-check svg { width: 16px; height: 16px; }
 .candidate.multi .c-check { border-radius: 8px; }
 .candidate.is-selected .c-check { background: var(--primary); border-color: var(--primary); color: var(--on-primary); transform: scale(1.06); }
-.candidate-abstain { background: transparent; border-style: dashed; box-shadow: none; min-height: 64px; }
-.candidate-abstain .c-name { font-weight: 700; font-size: 1rem; }
 .avatar-skip { background: var(--surface-2); color: var(--muted); }
 
 .review-list { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 10px; }
@@ -371,7 +369,7 @@ a { color: var(--primary); }
 .r-pos { font-size: 0.82rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 .r-choice { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-weight: 800; }
 .r-choice span { display: inline-flex; align-items: center; gap: 8px; }
-.r-skip { color: var(--muted); font-weight: 600; font-style: italic; }
+.r-missing { color: var(--danger); font-weight: 700; }
 .r-edit { color: var(--primary); font-weight: 800; font-size: 0.9rem; }
 
 .voting-as { display: flex; align-items: center; gap: 8px; font-size: 0.92rem; color: var(--muted); }

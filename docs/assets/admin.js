@@ -1160,7 +1160,7 @@
         <div class="result-head">
           <h3>${esc(p.name)}</h3>
           ${p.tie ? '<span class="badge badge-warning">Tie</span>' : ''}
-          <span class="result-meta">${p.ballots} ballot${p.ballots === 1 ? '' : 's'} · ${p.abstain} skipped${p.maxSelections > 1 ? ` · up to ${p.maxSelections} elected` : ''}</span>
+          <span class="result-meta">${p.ballots} ballot${p.ballots === 1 ? '' : 's'}${p.abstain ? ` · ${p.abstain} skipped` : ''}${p.maxSelections > 1 ? ` · up to ${p.maxSelections} elected` : ''}</span>
         </div>
         ${p.tie ? `<div class="notice notice-warning" style="margin-bottom:12px">${ICONS.alert}<span>It's a tie at the top. ${closed ? 'You’ll need to agree how to decide — for example a quick run-off between the tied nominees.' : 'This may change as more votes come in.'}</span></div>` : ''}
         <div class="bars">
@@ -1173,10 +1173,10 @@
                 <div class="bar"><span style="width:${(c.votes / total) * 100}%"></span></div>
               </div>`;
           }).join('')}
-          <div class="bar-row abstain">
+          ${p.abstain ? `<div class="bar-row abstain">
             <div class="bar-label"><span class="avatar avatar-sm avatar-skip">–</span><span class="name">Skipped</span><span class="num">${p.abstain}</span><span class="pct">${pct(p.abstain)}</span></div>
             <div class="bar"><span style="width:${(p.abstain / total) * 100}%"></span></div>
-          </div>
+          </div>` : ''}
         </div>
       </section>`;
   }
@@ -1197,7 +1197,7 @@
         lines.push([p.name, c.name, c.votes, Math.round((c.votes / total) * 1000) / 10 + '%',
           lead ? (p.tie ? 'Tied' : (r.status === 'closed' ? 'Winner' : 'Leading')) : ''].map(csvCell).join(','));
       });
-      lines.push([p.name, 'Skipped', p.abstain, Math.round((p.abstain / total) * 1000) / 10 + '%', ''].map(csvCell).join(','));
+      if (p.abstain) lines.push([p.name, 'Skipped', p.abstain, Math.round((p.abstain / total) * 1000) / 10 + '%', ''].map(csvCell).join(','));
     });
     downloadFile('election-results.csv', '﻿' + lines.join('\n'), 'text/csv;charset=utf-8');
   }

@@ -51,7 +51,7 @@ const DEFAULT_SETTINGS = {
 
 const STATUSES = ['draft', 'open', 'closed'];
 const VOTER_CHECK_MODES = ['namePhone', 'code', 'open'];
-const ABSTAIN = 'ABSTAIN';
+const ABSTAIN = 'ABSTAIN'; // no longer offered to voters; kept so older ballots still tally
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O, 1/I
 
 // ───────────────────────────── Entry points ─────────────────────────────
@@ -483,15 +483,10 @@ function validateChoices_(choices) {
   positions.forEach(function (p) {
     let picked = choices[p.id];
     if (picked === undefined || picked === null || picked === '') {
-      throw err_('INCOMPLETE', 'Please make a choice (or skip) for ' + p.name + '.');
+      throw err_('INCOMPLETE', 'Please choose someone for ' + p.name + '.');
     }
     if (!Array.isArray(picked)) picked = [picked];
     picked = picked.map(String).filter(function (id, i, arr) { return arr.indexOf(id) === i; });
-    if (picked.indexOf(ABSTAIN) >= 0) {
-      if (picked.length > 1) throw err_('INVALID_CHOICE', 'Your choice for ' + p.name + ' is not valid.');
-      rows.push([p.id, p.name, ABSTAIN, 'Abstained']);
-      return;
-    }
     if (!picked.length || picked.length > p.maxSelections) {
       throw err_('INVALID_CHOICE', 'Please choose up to ' + p.maxSelections + ' for ' + p.name + '.');
     }
@@ -603,7 +598,7 @@ function writeResultsSheet_() {
         '',
       ]);
     });
-    out.push(['Abstained', p.abstain, '', '', '']);
+    if (p.abstain) out.push(['Abstained', p.abstain, '', '', '']);
     out.push(['', '', '', '', '']);
   });
   sh.clear();
@@ -736,8 +731,11 @@ function sendResultsEmail_() {
       html += '<tr><td style="padding:4px 0;' + (lead ? 'font-weight:bold' : '') + '">' + (lead ? '★ ' : '') + esc(c.name)
         + '</td><td style="padding:4px 0;text-align:right">' + c.votes + '</td></tr>';
     });
-    html += '<tr><td style="padding:4px 0;color:#6d6476">Abstained</td><td style="padding:4px 0;text-align:right;color:#6d6476">'
-      + p.abstain + '</td></tr></table>';
+    if (p.abstain) {
+      html += '<tr><td style="padding:4px 0;color:#6d6476">Abstained</td><td style="padding:4px 0;text-align:right;color:#6d6476">'
+        + p.abstain + '</td></tr>';
+    }
+    html += '</table>';
   });
   html += '<p style="margin-top:24px"><a href="' + esc(ss_().getUrl()) + '">Open the spreadsheet</a></p></div>';
   MailApp.sendEmail({ to: to, subject: 'Results: ' + s.electionTitle, htmlBody: html, name: 'Election app' });

@@ -6,7 +6,6 @@
   const PREVIEW = new URLSearchParams(location.search).has('preview');
   const app = $('#app');
   const brand = $('#brand-name');
-  const ABSTAIN = 'ABSTAIN';
 
   const state = {
     election: null,
@@ -87,12 +86,11 @@
   function cleanChoices(choices) {
     const out = {};
     state.positions.forEach((p) => {
-      const ids = new Set(p.nominees.map((n) => n.id).concat(ABSTAIN));
+      const ids = new Set(p.nominees.map((n) => n.id));
       let c = choices[p.id];
       if (c == null) return;
       if (Array.isArray(c)) {
         c = c.filter((id) => ids.has(id));
-        if (c.indexOf(ABSTAIN) >= 0) c = [ABSTAIN];
         c = c.slice(0, p.maxSelections);
         if (c.length) out[p.id] = c;
       } else if (ids.has(c)) {
@@ -217,7 +215,7 @@
         </div>
         <ol class="how">
           ${needsIdentity() ? `<li><span class="num">1</span><span>${mode() === 'code' ? 'Enter your voter code' : 'Tell us your name and phone number'}</span></li>` : ''}
-          <li><span class="num">${needsIdentity() ? 2 : 1}</span><span>Pick one person for each position — or skip</span></li>
+          <li><span class="num">${needsIdentity() ? 2 : 1}</span><span>Pick one person for each position</span></li>
           <li><span class="num">${needsIdentity() ? 3 : 2}</span><span>Check your choices and submit</span></li>
         </ol>
         <p class="fineprint">${ICONS.lock} Your vote is secret — only the totals are counted.</p>
@@ -285,7 +283,6 @@
         <fieldset class="candidates" aria-describedby="pos-hint">
           <legend class="sr-only">${esc(p.name)}</legend>
           ${p.nominees.map((n) => card(n.id, n.displayName, n.bio, avatar(n.displayName, n.photoUrl))).join('')}
-          ${card(ABSTAIN, 'Skip this position', `I'd rather not vote for ${p.name}`, '<span class="avatar avatar-skip" aria-hidden="true">–</span>', 'candidate-abstain')}
         </fieldset>
         ${actionbar(`
           <button class="btn btn-lg" id="back" aria-label="Back">${ICONS.arrowLeft}</button>
@@ -297,8 +294,8 @@
         ? `<p class="voting-as">${avatar(state.identity.name, '', 'sm')} Voting as <b>${esc(state.identity.name)}</b></p>` : '';
       const rows = state.positions.map((p, i) => {
         const c = [].concat(state.choices[p.id] || []);
-        const names = c.indexOf(ABSTAIN) >= 0 || !c.length
-          ? '<span class="r-skip">Skipped</span>'
+        const names = !c.length
+          ? '<span class="r-missing">Not chosen yet</span>'
           : c.map((id) => {
             const n = p.nominees.find((x) => x.id === id);
             return n ? `<span>${avatar(n.displayName, n.photoUrl, 'sm')}${esc(n.displayName)}</span>` : '';
@@ -434,16 +431,12 @@
         if (p.maxSelections > 1) {
           let c = [].concat(state.choices[p.id] || []).filter((id) => id !== input.value);
           if (input.checked) {
-            if (input.value === ABSTAIN) c = [ABSTAIN];
-            else {
-              c = c.filter((id) => id !== ABSTAIN);
-              if (c.length >= p.maxSelections) {
-                input.checked = false;
-                toast(`You can choose up to ${p.maxSelections} for ${p.name}.`);
-                return;
-              }
-              c.push(input.value);
+            if (c.length >= p.maxSelections) {
+              input.checked = false;
+              toast(`You can choose up to ${p.maxSelections} for ${p.name}.`);
+              return;
             }
+            c.push(input.value);
           }
           state.choices[p.id] = c;
           $$('input', fieldset).forEach((i) => { i.checked = c.indexOf(i.value) >= 0; });
@@ -628,7 +621,7 @@
     if (!quick || Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     if (dx < 0) {
       if (hasChoice(state.positions[state.index])) next();
-      else toast('Choose someone (or skip) first.');
+      else toast('Choose someone first.');
     } else {
       back();
     }

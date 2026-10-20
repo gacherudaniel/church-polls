@@ -1,0 +1,9 @@
+{
+  "name": "church-polls",
+  "private": true,
+  "description": "Communications Committee election app (GitHub Pages + Google Apps Script)",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "node --test tests/*.test.js"
+  }
+}

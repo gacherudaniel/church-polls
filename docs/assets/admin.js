@@ -144,7 +144,7 @@
       ${mockBanner()}
       <div class="admin">
         <header class="admin-header">
-          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" style="width:40px;height:40px"><rect width="32" height="32" rx="9" fill="#5a3fc0"/><path d="M9 17h14v6.5a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1z" fill="#fff"/><path d="M12 17V9a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v8" fill="none" stroke="#fff" stroke-width="2"/><path d="m13.6 12.4 1.7 1.7 3.2-3.4" fill="none" stroke="#e9a23b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" style="width:40px;height:40px"><rect width="32" height="32" rx="9" fill="#2f6b4f"/><path d="M9 17h14v6.5a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1z" fill="#fff"/><path d="M12 17V9a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v8" fill="none" stroke="#fff" stroke-width="2"/><path d="m13.6 12.4 1.7 1.7 3.2-3.4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <div class="grow">
             <h1 id="hdr-title"></h1>
             <div class="row" id="hdr-status" style="gap:8px;margin-top:4px"></div>

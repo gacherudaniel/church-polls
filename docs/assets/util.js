@@ -39,13 +39,6 @@
     return (first + last).toUpperCase();
   }
 
-  function hue(name) {
-    const hues = [262, 330, 18, 38, 152, 190, 214, 290];
-    let h = 0;
-    for (const ch of String(name || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-    return hues[h % hues.length];
-  }
-
   /** Google Drive "share" links don't display as images; turn them into a direct image link. */
   function photoSrc(url) {
     const u = String(url || '').trim();
@@ -60,7 +53,7 @@
     const img = src
       ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`
       : '';
-    return `<span class="${cls}" style="--h:${hue(name)}" aria-hidden="true">${img || esc(initials(name))}</span>`;
+    return `<span class="${cls}" aria-hidden="true">${img || esc(initials(name))}</span>`;
   }
 
   /** Mirrors normalizePhone_ in Code.gs, so voters get instant feedback. */
@@ -129,7 +122,7 @@
     const dpr = Math.min(root.devicePixelRatio || 1, 2);
     const W = (canvas.width = innerWidth * dpr);
     const H = (canvas.height = innerHeight * dpr);
-    const colors = ['#5a3fc0', '#e9a23b', '#e5527a', '#2bb3a3', '#7d9cff', '#f5d04c'];
+    const colors = ['#2f6b4f', '#86bfa2', '#a8741a', '#d8d3c4', '#4e8a6c'];
     const pieces = Array.from({ length: 130 }, () => ({
       x: W / 2 + (Math.random() - 0.5) * W * 0.3,
       y: H * 0.35,
@@ -231,7 +224,7 @@
   };
 
   root.U = {
-    $, $$, esc, store, uid, initials, hue, avatar, photoSrc, normalizePhone,
+    $, $$, esc, store, uid, initials, avatar, photoSrc, normalizePhone,
     formatDateTime, formatCountdown, timeAgo, toast, confetti, reducedMotion,
     csvCell, downloadFile, copyText, confirmDialog, ICONS,
   };
